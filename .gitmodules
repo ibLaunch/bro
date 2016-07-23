@@ -25,3 +25,6 @@
 [submodule "aux/broker"]
 	path = aux/broker
 	url = git://git.bro.org/broker
+[submodule "aux/package-manager"]
+	path = aux/package-manager
+	url = git://git.bro.org/package-manager

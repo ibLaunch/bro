@@ -196,6 +196,27 @@ CheckOptionalBuildSources(aux/broctl   Broctl   INSTALL_BROCTL)
 CheckOptionalBuildSources(aux/bro-aux  Bro-Aux  INSTALL_AUX_TOOLS)
 CheckOptionalBuildSources(aux/broccoli Broccoli INSTALL_BROCCOLI)
 
+set(_bropkgsrc ${CMAKE_CURRENT_SOURCE_DIR}/aux/package-manager)
+set(_bropkgbin ${CMAKE_CURRENT_BINARY_DIR}/aux/package-manager)
+
+if ( IS_DIRECTORY ${_bropkgsrc} )
+    set(INSTALL_BROPKG true)
+    set(BRO_ROOT ${BRO_ROOT_DIR})
+
+    if ( NOT BINARY_PACKAGING_MODE )
+        set(BRO_DIST ${CMAKE_CURRENT_SOURCE_DIR})
+    endif ()
+
+    configure_file(${_bropkgsrc}/bro-pkg ${_bropkgbin}/bro-pkg @ONLY)
+    configure_file(${_bropkgsrc}/bro-pkg.bro.config
+                   ${_bropkgbin}/bro-pkg.config @ONLY)
+
+    install(DIRECTORY ${_bropkgsrc}/bropkg DESTINATION ${BRO_ROOT}/lib/python)
+    install(PROGRAMS ${_bropkgbin}/bro-pkg DESTINATION bin)
+    InstallPackageConfigFile(${_bropkgbin}/bro-pkg.config
+        ${BRO_ETC_INSTALL_DIR} bro-pkg.config)
+endif ()
+
 ########################################################################
 ## Packaging Setup
 
@@ -237,6 +258,7 @@ message(
     "\nBroccoli:          ${INSTALL_BROCCOLI}"
     "\nBroctl:            ${INSTALL_BROCTL}"
     "\nAux. Tools:        ${INSTALL_AUX_TOOLS}"
+    "\nPackage Manager:   ${INSTALL_BROPKG}"
     "\n"
     "\nGeoIP:             ${USE_GEOIP}"
     "\ngperftools found:  ${HAVE_PERFTOOLS}"
