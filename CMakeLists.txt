@@ -207,12 +207,18 @@ if ( IS_DIRECTORY ${_bropkgsrc} )
         set(BRO_DIST ${CMAKE_CURRENT_SOURCE_DIR})
     endif ()
 
+    if ( NOT BRO_MAN_INSTALL_PATH )
+        set(BRO_MAN_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/share/man)
+    endif ()
+
     configure_file(${_bropkgsrc}/bro-pkg ${_bropkgbin}/bro-pkg @ONLY)
     configure_file(${_bropkgsrc}/bro-pkg.bro.config
                    ${_bropkgbin}/bro-pkg.config @ONLY)
 
     install(DIRECTORY ${_bropkgsrc}/bropkg DESTINATION ${BRO_ROOT}/lib/python)
     install(PROGRAMS ${_bropkgbin}/bro-pkg DESTINATION bin)
+    install(FILES ${_bropkgsrc}/doc/man/bro-pkg.1
+            DESTINATION ${BRO_MAN_INSTALL_PATH}/man1)
     InstallPackageConfigFile(${_bropkgbin}/bro-pkg.config
         ${BRO_ETC_INSTALL_DIR} bro-pkg.config)
 endif ()
